@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="logintestsuite" verbose="1">
+	<test name="HealthCheckTest">
+		<classes>
+			<class name="com.herokuapp.restfulbroker.HealthCheckTest" />
+		</classes>
+	</test>
+	<test name="GetBookingIdsTest">
+		<classes>
+			<class name="com.herokuapp.restfulbroker.GetBookingIdsTest" />
+		</classes>
+	</test>
+	<test name="CreateBookingTest">
+		<classes>
+			<class name="com.herokuapp.restfulbroker.CreateBookingTest" />
+		</classes>
+	</test>
+</suite>
