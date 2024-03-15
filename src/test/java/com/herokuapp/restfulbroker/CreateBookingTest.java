@@ -5,12 +5,17 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
 import com.herokuapp.restfulbroker.common.BaseTest;
+import com.herokuapp.restfulbroker.model.Booking;
+import com.herokuapp.restfulbroker.model.BookingId;
+import com.herokuapp.restfulbroker.model.Bookingdates;
 
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 public class CreateBookingTest extends BaseTest {
 
-	@Test
+	@Test(enabled=false)
 	public void createBookingTest() {
 		Response response = createBooking();
 		response.print();
@@ -43,5 +48,28 @@ public class CreateBookingTest extends BaseTest {
 		softAssert.assertEquals(actualAdditionalneeds, "Baby crib", "additionalneeds in response is not expected");
 
 		softAssert.assertAll();
+	}
+	
+	@Test
+	public void createBookingWithPOJOTest() {
+		// Create body using POJOs
+		Bookingdates bookingdates = new Bookingdates("2020-03-25", "2020-03-27");
+		Booking booking = new Booking("Olga", "Shyshkin", 200, false, bookingdates, "Baby crib");
+
+		// Get response
+		Response response = RestAssured.given(spec).contentType(ContentType.JSON).body(booking)
+				.post("/booking");
+		response.print();
+		BookingId bookingid = response.as(BookingId.class);
+
+		// Verifications
+		// Verify response 200
+		Assert.assertEquals(response.getStatusCode(), 200, "Status code should be 200, but it's not");
+
+		System.out.println("Request booking : " + booking.toString());
+		System.out.println("Response booking: " + bookingid.getBooking().toString());
+		
+		// Verify All fields
+		Assert.assertEquals(bookingid.getBooking().toString(), booking.toString());
 	}
 }
